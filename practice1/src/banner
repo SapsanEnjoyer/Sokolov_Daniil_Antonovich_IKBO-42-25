@@ -1,0 +1,15 @@
+#!/bin/bash
+set -euo pipefail
+
+if [[ $# -eq 0 ]]; then
+    printf 'Использование: %s ТЕКСТ\n' "$0" >&2
+    exit 1
+fi
+
+text="$*"
+width=$((${#text} + 2))
+rule=$(printf '%*s' "$width" '' | tr ' ' '-')
+
+printf '+%s+\n' "$rule"
+printf '| %s |\n' "$text"
+printf '+%s+\n' "$rule"

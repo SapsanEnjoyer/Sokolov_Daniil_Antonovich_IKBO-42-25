@@ -1,0 +1,31 @@
+#!/bin/bash
+set -euo pipefail
+
+target_dir="/usr/local/bin"
+
+if [[ $# -ne 1 ]]; then
+    printf 'Использование: %s ФАЙЛ\n' "$0" >&2
+    exit 1
+fi
+
+program="$1"
+
+if [[ ! -f "$program" ]]; then
+    printf 'Нет файла: %s\n' "$program" >&2
+    exit 1
+fi
+
+if [[ ! -d "$target_dir" ]]; then
+    printf 'Нет каталога: %s\n' "$target_dir" >&2
+    exit 1
+fi
+
+command_name=$(basename -- "$program")
+
+if [[ "$(id -u)" -eq 0 ]]; then
+    install -m 0755 -- "$program" "${target_dir}/${command_name}"
+else
+    sudo install -m 0755 -- "$program" "${target_dir}/${command_name}"
+fi
+
+printf 'Команда %s записана в %s (права 0755)\n' "$command_name" "$target_dir"
